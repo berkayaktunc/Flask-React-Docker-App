@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:5173"  # Vite'in varsayılan portu 5173'tür, bunu 3000'e yönlendiriyoruz
+    networks:
+      - app-network
+    command: npm run dev
+  backend:
+    build:
+      context: ./backend  # Backend dizinini temel alır
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+    command: python app.py
+
+networks:
+  app-network:
+    driver: bridge
